@@ -1,0 +1,61 @@
+/**
+ * Created by Aliez on 2018/3/28.
+ */
+import React from 'react';
+import {
+    AppRegistry,
+    StyleSheet,
+    Text,
+    View,
+    ViewPagerAndroid,
+    ImageBackground,
+    Button,
+    TouchableOpacity
+} from 'react-native';
+import Swiper from 'react-native-swiper'
+import style from "./Style"
+
+const styles = style;
+
+class GuidePage extends React.Component{
+    static navigationOptions={
+        title: 'Guide',
+        header: null,
+    };
+
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+            <Swiper style={styles.wrapper} showsButtons loop={false}>
+                <View style={styles.slide1}>
+                    <ImageBackground source={{uri:'/Users/Aliez/WebstormProjects/CallingU/img/guide1.jpg'}} style={styles.backgroundImage}>
+                    </ImageBackground>
+                </View>
+                <View style={styles.slide2}>
+                    <ImageBackground source={{uri:'/Users/Aliez/WebstormProjects/CallingU/img/guide2.jpg'}} style={styles.backgroundImage}>
+                    </ImageBackground>
+                </View>
+                <View style={styles.slide3}>
+                    <ImageBackground source={{uri:'/Users/Aliez/WebstormProjects/CallingU/img/guide3.jpg'}} style={styles.backgroundImage}>
+                        <View style={styles.stone_G}/>
+                        <View style={styles.stone_G}/>
+                        <View style={styles.stone_G}/>
+                        <View style={styles.container_G}>
+                            <TouchableOpacity style={styles.btn_G}
+                                              onPress={() => this.props.navigation.navigate('Welcome')} title="CallingU">
+                                <Text style={styles.btnText}>
+                                    Welcome!
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </ImageBackground>
+                </View>
+            </Swiper>
+        )
+    }
+}
+
+export default GuidePage;
