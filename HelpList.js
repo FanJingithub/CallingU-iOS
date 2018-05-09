@@ -3,9 +3,7 @@ import {
     Image,
     View,
     Text,
-    ImageBackground,
-    TouchableOpacity,
-    StyleSheet
+    Linking,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import style from "./Style";
@@ -18,10 +16,16 @@ class HelpList extends React.Component{
         header: null,
     };
 
+    componentDidMount(){
+    }
+
     constructor(props) {
         super(props);
         this.state = {
             navigation: this.props.navigation,
+            number: this.props.navigation.state.params.number,
+            longitude: this.props.navigation.state.params.longitude,
+            latitude: this.props.navigation.state.params.latitude,
         }
     }
 

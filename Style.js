@@ -1,39 +1,40 @@
 /**
  * Created by Aliez on 2018/3/28.
  */
-import {StyleSheet} from "react-native";
+import {StyleSheet,Dimensions} from "react-native";
+const per = Dimensions.get('window').width/414;
 
 const style = StyleSheet.create({
-    container_G:{
+    container_G: {
         flex: 1,
     },
-    container_W:{
+    container_W: {
         flex: 1,
     },
     container_P: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor:'rgb(255, 255, 255)'
+        backgroundColor: 'rgba(0,0,0,0)'
     },
     container_S: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor:'rgb(255, 255, 255)'
+        backgroundColor: 'rgb(255, 255, 255)'
     },
     container_F: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor:'rgb(255, 255, 255)'
+        backgroundColor: 'rgb(255, 255, 255)'
     },
     container_C: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor:'rgb(255, 255, 255)'
+        backgroundColor: 'rgb(255, 255, 255)'
     },
     container_M: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor:'rgb(255, 255, 255)',
+        backgroundColor: 'rgb(255, 255, 255)',
     },
     container_M_Body: {
         flex: 0.4,
@@ -44,17 +45,20 @@ const style = StyleSheet.create({
         alignSelf: 'flex-end',
         alignItems: 'flex-end',
         justifyContent: 'flex-end',
-        width: 60,
-        height: 60,
-        paddingBottom: 20,
-        paddingRight: 10,
+        width: per * 60,
+        height: per * 60,
+        paddingBottom: per * 20,
+        paddingRight: per * 10,
+    },
+    container_M3:{
+        flex:0.4,
     },
     container_V: {
-        flex:0.4,
+        flex: 0.4,
     },
     container_V_Body: {
         alignItems: 'center',
-        paddingTop: 60,
+        paddingTop: per * 60,
     },
     container_T: {
         flex: 0.4,
@@ -62,32 +66,43 @@ const style = StyleSheet.create({
         alignItems: 'center',
     },
     container_H: {
-        flex:0.8,
+        flex: 0.8,
         flexDirection: 'column',
         alignItems: 'center',
     },
-    container_Modal:{
+    container_A: {
+        flex: 1,
+        flexDirection: 'column',
+        backgroundColor: 'rgba(0,0,0,0)'
+    },
+    container_initial: {
         flex: 1,
         justifyContent: 'center',
-        padding: 60,
+        alignItems: 'center',
+        backgroundColor: '#f0f8ff',
     },
-    inner_Modal:{
+    container_Modal: {
+        flex: 1,
+        justifyContent: 'center',
+        padding: per * 60,
+    },
+    inner_Modal: {
         borderRadius: 10,
         alignItems: 'center',
     },
 
-    Modal:{
+    Modal: {
         flex: 0.08,
         alignItems: 'center',
     },
 
     img_M: {
-        paddingLeft:25,
-        width:420,
-        height:300,
+        paddingLeft: per * 25,
+        width: per * 420,
+        height: per * 300,
     },
 
-    PreferenceSelectionListExample:{
+    PreferenceSelectionListExample: {
         flex: 0.8,
     },
 
@@ -106,49 +121,65 @@ const style = StyleSheet.create({
         flexDirection: 'row',
     },
     headerText: {
-        fontSize: 20,
+        fontSize: per * 20,
         color: '#f0f8ff',
-        paddingTop: 15,
-        paddingRight: 30,
+        paddingTop: per * 15,
+        paddingRight: per * 30,
     },
     headerText_P: {
-        fontSize: 20,
+        fontSize: per * 20,
         color: '#f0f8ff',
-        paddingTop: 15,
-        paddingRight: 5,
+        paddingTop: per * 15,
+        paddingRight: per * 5,
     },
     headerText_P2: {
-        fontSize: 20,
+        fontSize: per * 20,
         color: '#f0f8ff',
-        paddingTop: 15,
-        paddingRight: 10,
+        paddingTop: per * 15,
+        paddingRight: per * 10,
+    },
+    headerText_P3: {
+        fontSize: per * 20,
+        color: '#f0f8ff',
+        paddingTop: per * 15,
+        paddingLeft: per * 20,
+    },
+    headerText_F: {
+        fontSize: per * 20,
+        color: '#f0f8ff',
+        paddingTop: per * 15,
+        paddingRight: per * 15,
     },
 
 
     icon: {
-        paddingTop: 20,
-        paddingLeft: 10,
+        paddingTop: per * 20,
+        paddingLeft: per * 10,
     },
     icon2: {
-        width: 60,
-        height: 60,
+        width: per * 60,
+        height: per * 60,
     },
 
-    stone_G:{
-        flex:1
+    icon4:{
+        paddingRight: per*6,
+        width:per*25,
+        height:per*25,
     },
-    stone_W:{
+
+    stone_G: {
+        flex: 1
+    },
+    stone_W: {
         flex: 6,
     },
 
 
-    shift_P:{
-        paddingLeft: 30,
+    shift_P: {
+        paddingLeft: per * 30,
     },
 
-
-    wrapper: {
-    },
+    wrapper: {},
     slide1: {
         flex: 1,
     },
@@ -158,219 +189,240 @@ const style = StyleSheet.create({
     slide3: {
         flex: 1,
     },
-    backgroundImage:{
-        flex:1,
+    backgroundImage: {
+        flex: 1,
         zIndex: -1,
-        alignItems:'center',
-        justifyContent:'center',
-        width:null,
-        height:null,
-        backgroundColor:'rgba(0,0,0,0)',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: null,
+        height: null,
+        backgroundColor: 'rgba(0,0,0,0)',
     },
 
 
-    buttonContainer:{
+    buttonContainer: {
         flex: 1,
         flexDirection: 'row',
         flexWrap: 'wrap',
     },
-    buttonSpace:{
+    buttonSpace: {
         flex: 0.25,
     },
     btn_G: {
-        width: 100,
-        height: 50,
+        width: per * 100,
+        height: per * 50,
         zIndex: 1,
         alignItems: 'center',
         justifyContent: 'center',
         alignSelf: 'center',
-        backgroundColor:'rgb(247,92,47)',
-        borderRadius:10
+        backgroundColor: 'rgb(247,92,47)',
+        borderRadius: per * 10
     },
     btn_W: {
-        width: 160,
-        height: 50,
+        width: per * 160,
+        height: per * 50,
         alignItems: 'center',
         justifyContent: 'center',
         alignSelf: 'center',
-        backgroundColor:'rgb(247,92,47)',
-        borderRadius:10
+        backgroundColor: 'rgb(247,92,47)',
+        borderRadius: per * 10
     },
     btn_P: {
-        width: 340,
-        height: 50,
+        width: per * 340,
+        height: per * 50,
         alignItems: 'center',
         justifyContent: 'center',
         alignSelf: 'center',
         backgroundColor: 'rgb(247,92,47)',
-        borderRadius: 10
+        borderRadius: per * 10
     },
     btn_S: {
-        width: 340,
-        height: 50,
+        width: per * 340,
+        height: per * 50,
         alignItems: 'center',
         justifyContent: 'center',
         alignSelf: 'center',
         backgroundColor: 'rgb(247,92,47)',
-        borderRadius: 10
+        borderRadius: per * 10
     },
     btn_F: {
-        width: 340,
-        height: 50,
+        width: per * 340,
+        height: per * 50,
         alignItems: 'center',
         justifyContent: 'center',
         alignSelf: 'center',
         backgroundColor: 'rgb(247,92,47)',
-        borderRadius: 10
+        borderRadius: per * 10
     },
     btn_C: {
-        width: 340,
-        height: 50,
+        width: per * 340,
+        height: per * 50,
         alignItems: 'center',
         justifyContent: 'center',
         alignSelf: 'center',
         backgroundColor: 'rgb(247,92,47)',
-        borderRadius: 10
+        borderRadius: per * 10
     },
     btn_M: {
-        width: 340,
-        height: 50,
+        width: per * 340,
+        height: per * 50,
         alignItems: 'center',
         justifyContent: 'center',
         alignSelf: 'center',
         backgroundColor: 'rgb(247,92,47)',
-        borderRadius: 10,
+        borderRadius: per * 10,
     },
     btn_A1: {
-        width: 140,
-        height: 50,
+        width: per * 140,
+        height: per * 50,
         alignItems: 'center',
         justifyContent: 'center',
         alignSelf: 'center',
         backgroundColor: 'rgba(0,0,0,0)',
-        borderRadius: 10,
+        borderRadius: per * 10,
     },
     btn_A2: {
-        width: 50,
-        height: 50,
+        width: per * 50,
+        height: per * 50,
         alignItems: 'center',
         justifyContent: 'center',
         alignSelf: 'center',
         backgroundColor: 'rgba(0,0,0,0)',
-        borderRadius: 10,
+        borderRadius: per * 10,
     },
     btn_H: {
-        width: 115,
-        height: 50,
+        width: per * 115,
+        height: per * 50,
         alignItems: 'center',
         justifyContent: 'center',
         alignSelf: 'center',
         backgroundColor: 'rgba(0,0,0,0)',
-        borderRadius: 10,
+        borderRadius: per * 10,
     },
-    btn_security_code:{
-        width: 120,
-        height: 40,
+    btn_security_code: {
+        width: per * 120,
+        height: per * 40,
         alignItems: 'center',
         justifyContent: 'center',
         alignSelf: 'center',
 
-        borderRadius:10
+        borderRadius: per * 10
+    },
+    btn_askForHelp: {
+        width: per * 138,
+        height: per * 35,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgb(255,255,255)',
     },
     btnText: {
-        fontSize: 18
+        fontSize: per * 18
+    },
+    btnText_askForHelp: {
+        fontSize: per * 18,
+        color: '#000000',
     },
     btnText_P: {
-        fontSize: 18,
+        fontSize: per * 18,
         color: '#f0f8ff',
     },
     btnText_S: {
-        fontSize: 18,
+        fontSize: per * 18,
         color: '#f0f8ff',
     },
     btnText_F: {
-        fontSize: 18,
+        fontSize: per * 18,
         color: '#f0f8ff',
     },
     btnText_C: {
-        fontSize: 18,
+        fontSize: per * 18,
         color: '#f0f8ff',
     },
     btnText_M: {
-        fontSize: 18,
+        fontSize: per * 18,
         color: '#f08080',
     },
     btnText_M_: {
-        fontSize: 18,
+        fontSize: per * 18,
         color: '#f0f8ff',
     },
     btnText_A: {
-        fontSize: 22,
+        fontSize: per * 22,
         fontWeight: '700',
         color: '#e9967a',
     },
     btnText_V: {
-        fontSize:26,
-        fontWeight:'700',
+        fontSize: per * 26,
+        fontWeight: '700',
         color: '#b22222',
     },
     btnText_H: {
-        fontSize:26,
-        fontWeight:'700',
+        fontSize: per * 26,
+        fontWeight: '700',
         color: '#b22222',
     },
-    btnText_security_code:{
-        fontSize: 14,
+    btnText_security_code: {
+        fontSize: per * 14,
         color: '#f0f8ff',
     },
 
-    modal_btn_Container:{
+    modal_btn_Container: {
         flexDirection: 'row',
         justifyContent: 'flex-end',
-        paddingTop: 10
+        paddingTop: per * 10
+    },
+    modal_btn_Container_QB: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        paddingTop: per * 10
+    },
+
+    feedbackText: {
+        fontSize: per * 18,
+        color: '#f08080',
     },
 
     preferText1: {
-        fontSize: 24,
+        fontSize: per * 24,
         color: '#000000',
     },
     preferText2: {
-        fontSize: 16,
+        fontSize: per * 16,
         fontWeight: '800',
         color: '#a9a9a9',
     },
     preferText3: {
-        fontSize: 22,
+        fontSize: per * 22,
         fontWeight: '900',
         color: '#000000',
-        paddingTop: 5,
-        paddingLeft: 14,
+        paddingTop: per * 5,
+        paddingLeft: per * 14,
     },
     messageText: {
-        fontSize: 18,
+        fontSize: per * 18,
         fontWeight: '800',
         color: '#a9a9a9',
-        paddingTop: 10,
-        paddingLeft: 14,
+        paddingTop: per * 10,
+        paddingLeft: per * 14,
     },
     versionText: {
-        fontSize: 24,
+        fontSize: per * 24,
         fontWeight: '800',
         color: '#a9a9a9',
     },
     tlistText: {
-        width: 400,
-        fontSize: 24,
-        lineHeight: 30,
+        width: per * 400,
+        fontSize: per * 24,
+        lineHeight: per * 30,
         fontWeight: '800',
         color: '#a9a9a9',
-        paddingTop: 30,
-        paddingLeft: 20,
+        paddingTop: per * 30,
+        paddingLeft: per * 20,
         justifyContent: 'center',
         alignItems: 'center',
     },
     helpText: {
-        fontSize: 24,
+        fontSize: per * 24,
         fontWeight: '800',
     },
     helpText1: {
@@ -387,56 +439,56 @@ const style = StyleSheet.create({
     },
     introTextHeader: {
         fontWeight: 'bold',
-        fontSize: 30,
-        paddingLeft: 40,
+        fontSize: per * 30,
+        paddingLeft: per * 40,
     },
     introTextContent: {
         fontWeight: 'normal',
-        fontSize: 20,
-        paddingTop: 15,
-        paddingLeft: 40,
-        paddingRight: 40,
-        color:'rgb(144,144,144)',
+        fontSize: per * 20,
+        paddingTop: per * 15,
+        paddingLeft: per * 40,
+        paddingRight: per * 40,
+        color: 'rgb(144,144,144)',
     },
-    PasswordSignInListExample:{
+    PasswordSignInListExample: {
         flex: 0.5
     },
-    forgetPassword:{
-        width: 110,
-        height: 50,
+    forgetPassword: {
+        width: per * 110,
+        height: per * 50,
         justifyContent: 'center',
-        paddingTop: 15,
-        paddingLeft: 40,
+        paddingTop: per * 15,
+        paddingLeft: per * 40,
     },
-    forgetPasswordText:{
-        fontSize: 15,
-        color:'#ff69b4',
+    forgetPasswordText: {
+        fontSize: per * 15,
+        color: '#ff69b4',
     },
-    reminder:{
-        width: 400,
-        height: 50,
+    reminder: {
+        width: per * 400,
+        height: per * 50,
         alignItems: 'center',
         justifyContent: 'center',
     },
-    reminderText:{
+    reminderText: {
         fontSize: 15,
         color: 'rgb(144,144,144)',
     },
-    information:{
-        fontSize: 15,
-        color:'#ff69b4',
+    information: {
+        fontSize: per * 15,
+        color: '#ff69b4',
     },
-    row:{
-        flexDirection:'row',
+    row: {
+        flexDirection: 'row',
         justifyContent: 'space-around',
-        paddingTop: 10,
+        paddingTop: per * 10,
     },
-    modal_Text_1:{
-        fontSize: 15,
+    modal_Text_1: {
+        fontSize: per * 15,
     },
-    modal_Text_2:{
-        paddingTop: 10,
-        fontSize: 15,
+    modal_Text_2: {
+        paddingTop: per * 10,
+        fontSize: per * 15,
     },
 
     ContactListExample: {
@@ -450,16 +502,42 @@ const style = StyleSheet.create({
         backgroundColor: 'rgb(255,255,255)',
     },
 
-    watermakeContainer:{
+    watermakeContainer: {
         flex: 0.25,
         alignItems: 'center',
-        flexDirection:'column',
+        flexDirection: 'column',
         justifyContent: 'flex-end',
-        paddingBottom: 15,
+        paddingBottom: per * 15,
     },
-    watermake:{
-        fontSize: 15,
+    watermake: {
+        fontSize: per * 15,
         color: 'rgb(144,144,144)',
+    },
+
+    preferText6: {
+        paddingLeft: per * 12,
+        paddingTop: per * 9,
+    },
+    preferText4: {
+        fontSize: per * 24,
+        fontWeight: '800',
+        color: '#000000',
+    },
+    preferText5: {
+        fontSize: per * 24,
+        fontWeight: '800',
+        color: '#a9a9a9',
+    },
+
+    contactEditListExample:{
+        flex:0.5,
+    },
+    contentStyle: {
+        borderRadius: per*100,
+        position: 'absolute',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row',
     },
 });
 

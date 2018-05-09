@@ -3,12 +3,11 @@ import {
     Image,
     View,
     Text,
-    ImageBackground,
     TouchableOpacity,
-    StyleSheet
 } from 'react-native';
 import QuitButton from './QuitButton';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import storage from '/Users/Aliez/WebstormProjects/CallingU/src/Util/Param.js';
 import style from "./Style";
 
 const styles = style;
@@ -31,34 +30,51 @@ class VersionDetail extends React.Component{
             versionCode: 2,
             versionName: '2.0',
             versionDetail: '',
+            setCookie: null,
         };
         this.handlePress = this.handlePress.bind(this)
     }
 
-    handlePress(){
-        fetch('https://www.xiaobenji.net/api/check-new?versionCode='+this.state.versionCode)
-            .then((res)=> {
-                if (res.status === 200) {
-                    alert(JSON.stringify(res.json()));
-                }
-                else if(res.status === 202)
-                    alert("接受请求，请求已经进入后台排队");
-                else if(res.status === 203)
-                    alert("未知错误");
-                else if(res.status === 400)
-                    alert("请求失败");
-                else if(res.status === 500)
-                    alert("服务器错误");
+    componentWillMount(){
+        storage.load({key:'SetCookie'})
+            .then((res) => {
+                this.state.setCookie = res;
             })
-            .then((res)=>{
-                // this.state.navigation.navigate('AskForHelp',{latitude:this.state.latitude,longitude:this.state.longitude});
-            })
-            .catch((err)=>console.error(err));
+            .catch((error) => {
+                alert(error);
+            });
     }
 
-    // componentWillMount(){
-    //     fetch('https://www.xiaobenji.net')
-    // }
+    handlePress(){
+        fetch('https://www.xiaobenji.net/api/check-new?versionCode='+this.state.versionCode.toLocaleString(),{
+            headers:{
+                'set-cookie': this.state.setCookie,
+            },
+        })
+            .then((res)=> {
+                if (res.status === 200) {
+                  res.json().then((res)=>{
+                      if(res.versionCode>this.state.versionCode)
+                          alert("请前往AppStore更新");
+                      else{
+                          alert("已是最新版本");
+                      }
+                  })
+                }
+                else if (res.status === 201)
+                    return Promise.reject("验证码错误或无效");
+                else if (res.status === 202)
+                    return Promise.reject("接受请求，请求已经进入后台排队");
+                else if (res.status === 203)
+                    return Promise.reject("未知错误");
+                else if (res.status === 400)
+                    return Promise.reject("请求失败");
+                else if (res.status === 500)
+                    return Promise.reject("服务器错误");
+            })
+
+            .catch((err)=>console.error(err));
+    }
 
     render(){
         return(

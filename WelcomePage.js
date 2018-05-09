@@ -3,14 +3,13 @@
  */
 import React from 'react';
 import {
-    Image,
     View,
     Text,
     ImageBackground,
     TouchableOpacity,
-    StyleSheet
 } from 'react-native';
 import style from "./Style"
+import storage from '/Users/Aliez/WebstormProjects/CallingU/src/Util/Param.js';
 
 const styles = style;
 
@@ -37,22 +36,22 @@ class WelcomePage extends React.Component{
                                 登录
                             </Text>
                         </TouchableOpacity>
-                        <View style={styles.buttonSpace}/>
-                        <TouchableOpacity style={styles.btn_W}
-                                          onPress={() => this.props.navigation.navigate('SignUp')}>
-                            <Text style={styles.btnText}>
-                                注册
-                            </Text>
-                        </TouchableOpacity>
+                        {/*<View style={styles.buttonSpace}/>*/}
+                        {/*<TouchableOpacity style={styles.btn_W}*/}
+                                          {/*onPress={() => this.props.navigation.navigate('SignUp')}>*/}
+                            {/*<Text style={styles.btnText}>*/}
+                                {/*注册*/}
+                            {/*</Text>*/}
+                        {/*</TouchableOpacity>*/}
 
                     </View>
                     <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.btn_W}
-                                          onPress={() => this.props.navigation.navigate('MainPage')}>
-                            <Text style={styles.btnText}>
-                                试用
-                            </Text>
-                        </TouchableOpacity>
+                        {/*<TouchableOpacity style={styles.btn_W}*/}
+                                          {/*onPress={() => this.props.navigation.navigate('MainPage')}>*/}
+                            {/*<Text style={styles.btnText}>*/}
+                                {/*试用*/}
+                            {/*</Text>*/}
+                        {/*</TouchableOpacity>*/}
                     </View>
                 </ImageBackground>
             </View>

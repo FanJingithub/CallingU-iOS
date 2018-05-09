@@ -1,14 +1,13 @@
 import React from 'react';
-import {View,Text,Modal} from 'react-native';
+import {View, Text,Dimensions} from 'react-native';
 import {
     StackNavigator,
     DrawerNavigator,
-    DrawerItems
+    DrawerItems,
 } from 'react-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import style from './Style';
-
+import InitializePage from './InitializePage';
 import GuidePage from "./Guide";
 import WelcomePage from './WelcomePage';
 import PasswordSignIn from './PasswordSignIn';
@@ -24,8 +23,11 @@ import HelpList from "./HelpList";
 import Feedback from "./Feedback";
 import Message from "./Message";
 import TlistSet from "./TlistSet";
+import ContactsEdit from './ContactsEdit';
+import NewContact from './NewContact';
+import Person from './Person';
 
-const styles = style;
+const per = Dimensions.get('window').width/414;
 
 const myContentComponent = (props) => (
     <View>
@@ -34,14 +36,17 @@ const myContentComponent = (props) => (
         }}>
             <View style={{
                 backgroundColor: '#f50057',
-                height: 220,
+                height: per*220,
                 alignItems: 'center',
                 justifyContent: 'center',
             }}>
                 <View style={{flexDirection: 'row',justifyContent: 'space-around' }}>
-                    <Icon name="user-circle" size={50} color="white"/>
-                    <View style={{flex: 0.25}}/>
-                    <Text style={{paddingTop: 15}}>用户名</Text>
+                    <Icon name="user-circle" size={per*50} color="white"/>
+                    {/*<View style={{flex: 0.25}}/>*/}
+                    {/*<View style={{flexDirection: 'column',justifyContent: 'space-around',alignItems: 'center'}}>*/}
+                        {/*<Text style={{paddingTop: 5}}>用户名</Text>*/}
+                        {/*<Text style={{paddingTop: 5}}>{phone}</Text>*/}
+                    {/*</View>*/}
                 </View>
             </View>
         </View>
@@ -53,6 +58,7 @@ const App_2 = DrawerNavigator({
     MainPage:{
       screen:MainPage,
     },
+    Person:{screen: Person},
     Preference: {screen: PreferenceSelection},
     Information: {screen:Information},
     VersionDetail: {screen:VersionDetail},
@@ -66,36 +72,53 @@ const App_2 = DrawerNavigator({
 
 
 const App_1 = StackNavigator({
-    Guide: {screen: GuidePage,
-        navigationOptions:({navigation})=>({
-            gesturesEnabled:false,
-        }),},
-    Welcome:{screen: WelcomePage,
-        navigationOptions:({navigation})=>({
-            gesturesEnabled:false,
+    // Initial: {
+    //     screen: InitializePage,
+    //     navigationOptions: ({navigation}) => ({
+    //         gesturesEnabled: false,
+    //     }),
+    // },
+    // Guide: {
+    //     screen: GuidePage,
+    //     navigationOptions: ({navigation}) => ({
+    //         gesturesEnabled: false,
+    //     }),
+    // },
+    // Welcome: {
+    //     screen: WelcomePage,
+    //     navigationOptions: ({navigation}) => ({
+    //         gesturesEnabled: false,
+    //     }),
+    // },
+    Password: {
+        screen: PasswordSignIn,
+        navigationOptions: ({navigation}) => ({
+            gesturesEnabled: false,
         }),
     },
-    Password:{screen: PasswordSignIn,
-        navigationOptions:({navigation})=>({
-            gesturesEnabled:false,
+    SignUp: {
+        screen: SignUp,
+        navigationOptions: ({navigation}) => ({
+            gesturesEnabled: false,
         }),
     },
-    SignUp:{screen: SignUp,
-        navigationOptions:({navigation})=>({
-            gesturesEnabled:false,
+    Forget: {
+        screen: ForgetPassword,
+        navigationOptions: ({navigation}) => ({
+            gesturesEnabled: false,
         }),
     },
-    Forget:{screen: ForgetPassword,
-        navigationOptions:({navigation})=>({
-            gesturesEnabled:false,
-        }),
-    },
-    ChangePhone:{
+    ChangePhone: {
         screen: ChangePhone,
-        navigationOptions:({navigation})=>({
-            gesturesEnabled:false,
+        navigationOptions: ({navigation}) => ({
+            gesturesEnabled: false,
         }),
     },
+},{
+    contentComponent: myContentComponent,
+    contentOptions:{
+        initialRouteName: InitializePage
+    }
 });
 
 const App = StackNavigator({
@@ -107,10 +130,29 @@ const App = StackNavigator({
     },
     MainPage:{
         screen: App_2,
-        // MainPage,
         navigationOptions:({navigation})=>({
             gesturesEnabled:false,
             header: null,
+        }),
+    },
+    ContactsEdit: {
+        screen: ContactsEdit,
+        navigationOptions: ({navigation}) => ({
+            gesturesEnabled: false,
+            header: null,
+        }),
+    },
+    NewContact: {
+        screen: NewContact,
+        navigationOptions: ({navigation}) => ({
+            gesturesEnabled: false,
+            header: null,
+        }),
+    },
+    Message: {
+        screen: Message,
+        navigationOptions: ({navigation}) => ({
+            gesturesEnabled: false,
         }),
     },
 },{
@@ -138,12 +180,6 @@ const SimpleApp = StackNavigator({
     },
     Feedback: {
         screen: Feedback,
-        navigationOptions: ({navigation}) => ({
-            gesturesEnabled: false,
-        }),
-    },
-    Message: {
-        screen: Message,
         navigationOptions: ({navigation}) => ({
             gesturesEnabled: false,
         }),

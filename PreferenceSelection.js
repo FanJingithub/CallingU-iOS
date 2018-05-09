@@ -3,17 +3,17 @@
  */
 import React from 'react';
 import {
-    Image,
     View,
     Text,
     TouchableOpacity,
+    FlatList
 } from 'react-native';
 import {
     List,
     Switch,
 } from 'antd-mobile';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import QuitButton from './QuitButton';
+import storage from '/Users/Aliez/WebstormProjects/CallingU/src/Util/Param.js';
 import { createForm } from 'rc-form';
 import style from "./Style";
 
@@ -23,6 +23,8 @@ class PreferenceSelectionList extends React.Component{
     constructor(props){
         super(props);
     }
+
+    ComponentWillMount(){}
 
     render() {
         const {getFieldProps} = this.props.form;
@@ -52,15 +54,39 @@ class ContactsList extends React.Component{
         super(props);
     }
 
-    render(){
+    _flatList;
+
+    _renderItem = (item) => {
+        let name = item.item.name;
+        let number = item.item.number;
         return (
-            <List>
-                <TouchableOpacity style={styles.btn_A1}>
+            <View>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('ContactsEdit',{name: item.item.name,number: item.item.number})}>
+                    <View style={{flexDirection: 'row',justifyContent: 'space-around'}}>
+                        <Text style={styles.preferText4}>{name}</Text>
+                        <Text style={styles.preferText5}>{number}</Text>
+                    </View>
+                </TouchableOpacity>
+            </View>
+        )
+    };
+
+    render(){
+
+        return (
+            <View style={{flex: 0.44}}>
+                <FlatList
+                    ref={(flatList) => this._flatList = flatList}
+                    renderItem={this._renderItem}
+                    keyExtractor={(item, index) => index.toString()}
+                    data={this.props.contacts}>
+                </FlatList>
+                <TouchableOpacity style={styles.btn_A1} onPress={() => this.props.navigation.navigate('NewContact')}>
                     <Text style={styles.btnText_A}>
                         ➕
                     </Text>
                 </TouchableOpacity>
-            </List>
+            </View>
         )
     }
 }
@@ -74,9 +100,20 @@ class Message extends React.Component {
         return (
             <View style={styles.MessageExample}>
                 <Text style={styles.messageText}>
-                    请帮助我！我遇到麻烦了！
+                    {this.props.message}
                 </Text>
                 <Text/>
+                <TouchableOpacity style={styles.btn_A2} onPress={() => this.props.navigation.navigate('Message'
+                    , {
+                        refresh: function () {
+                            this.forceUpdate();
+                        }
+                    }
+                )}>
+                    <Text style={styles.btnText_A}>
+                        编辑
+                    </Text>
+                </TouchableOpacity>
             </View>
         )
     }
@@ -98,7 +135,44 @@ class PreferenceSelection extends React.Component{
         this.state = {
             navigation: this.props.navigation,
             // value: false,
+            message: null,
+            contacts: [],
         }
+    }
+
+    componentWillMount(){
+        storage.load({key:'message'})
+            .then((res) => {
+                this.setState({
+                    message : res,
+                });
+            })
+            .catch((error) => {
+                this.setState({
+                    message : "我遇到麻烦了，请救救我！",
+                });
+                storage.save({key:'message',data: "我遇到麻烦了，请救救我！"});
+            });
+        storage.load({key: 'contacts'})
+            .then((res) => {
+                if(res===null || res===[]){
+                    this.setState({
+                        contacts:[],
+                    });
+                    storage.save({key:'contacts',data: []});
+                }
+                else{
+                    this.setState({
+                        contacts:res,
+                    });
+                }
+            })
+            .catch((error) => {
+            });
+    }
+
+    componentWillUnmount(){
+        this.timer&&clear(this.timer);
     }
 
     render(){
@@ -108,7 +182,7 @@ class PreferenceSelection extends React.Component{
                     <Icon.Button style={styles.icon} name="list" backgroundColor="rgb(247,92,47)"
                                  size={30} onPress={() => this.props.navigation.navigate('DrawerOpen')}/>
                     <Text style={styles.headerText_P}>偏好设置</Text>
-                    <QuitButton navigation={this.state.navigation}/>
+                    <Text>            </Text>
                 </View>
                 <View style={styles.PreferenceSelectionListExample}>
                     <Text/>
@@ -117,16 +191,11 @@ class PreferenceSelection extends React.Component{
                     <View style={styles.ContactListExample}>
                         <Text style={styles.preferText3}>联系人</Text>
                     </View>
-                    <ContactsListExample/>
+                    <ContactsListExample navigation={this.state.navigation} contacts={this.state.contacts}/>
                     <View style={styles.ContactListExample}>
                         <Text style={styles.preferText3}>短信内容</Text>
                     </View>
-                    <MessageExample/>
-                    <TouchableOpacity style={styles.btn_A2} onPress={() => this.props.navigation.navigate('Message')}>
-                        <Text style={styles.btnText_A}>
-                            编辑
-                        </Text>
-                    </TouchableOpacity>
+                    <MessageExample navigation={this.state.navigation} message={this.state.message}/>
                 </View>
             </View>
         );

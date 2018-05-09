@@ -1,14 +1,10 @@
-/**
- * Created by Aliez on 2018/4/7.
- */
 import React from 'react';
 import {
     View,
     Text,
     TouchableOpacity,
-    FlatList,
-    Dimensions,
-    Linking
+    Button,
+    FlatList
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {
@@ -22,10 +18,9 @@ import qs from 'qs';
 import style from "./Style";
 
 const styles = style;
-const per = Dimensions.get('window').width/414;
 
-class AskForHelp extends React.Component {
-    static navigationOptions = {
+class HelpDetail extends React.Component{
+    static navigationOption = {
         title: '求救界面',
         header: null,
     };
@@ -37,17 +32,16 @@ class AskForHelp extends React.Component {
         return (
             <WingBlank size="lg">
                 <WhiteSpace size="lg"/>
-                <TouchableOpacity style={{
-                    flex: 0.1, backgroundColor: 'rgb(255,255,255)',
-                    flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center'
-                }}>
-                    <Icon name="location-arrow" backgroundColor="rgb(255,255,255)"
-                          size={per * 50}/>
-                    <Text style={{fontSize: 20}}>救援者：</Text>
-                    <Text style={{fontSize: 20}}>{phoneNumber}</Text>
-                    <Icon.Button name="phone-square" backgroundColor="rgb(255,255,255)" size={per*30}
-                                 color="black" onPress={() => Linking.openURL('tel:'+{phoneNumber})}/>
-                </TouchableOpacity>
+                <Card>
+                    <Card.Header
+                        title="救助者: "
+                        extra={<View>this is extra</View>}
+                    />
+                    <Card.Body style={{paddingLeft: 10}}>
+                        <Text>联系电话: {phoneNumber}</Text>
+                    </Card.Body>
+                    <Card.Footer content="footer content" extra={<Text>extra footer content</Text>}/>
+                </Card>
                 <WhiteSpace size="lg"/>
             </WingBlank>
         )
@@ -57,22 +51,30 @@ class AskForHelp extends React.Component {
         if(this.state.rescuer.length < 1) {
             return (
                 <View>
-                    <View style={{height: per*2, backgroundColor: 'rgba(0,0,0,0)'}}/>
+                    <View style={{height: 2, backgroundColor: '#6A8372'}}/>
                     <WingBlank size="lg">
                         <WhiteSpace size="lg"/>
-                        <View style={styles.introText}>
-                            <Text style={styles.introTextContent}>我发送了突然昏厥的求救信号</Text>
-                            <Text style={styles.introTextContent}>暂时未发现救助人员</Text>
-                        </View>
+                        <Card>
+                            <Card.Header
+                                title="呼救者: "
+                                extra={<View>this is extra</View>}
+                            />
+                            <Card.Body style={{paddingLeft: 10}}>
+                                <Text>联系电话: {phoneNumber}</Text>
+                            </Card.Body>
+                            <Card.Footer content="footer content" extra={<Text>extra footer content</Text>}/>
+                        </Card>
+                        <WhiteSpace size="lg"/>
                     </WingBlank>
                 </View>
             );
         }
         else {
-            return <View style={{height: per*2, backgroundColor: 'rgba(0,0,0,0)'}}/>;
+            return <View style={{height: 2, backgroundColor: '#6A8372'}}/>;
         }
     };
 
+    //以下部分逻辑未定/暂未修改
     constructor(props) {
         super(props);
         this.state = {
@@ -103,7 +105,7 @@ class AskForHelp extends React.Component {
         };
         let text = {
             "number": this.state.number, "latitude": this.state.latitude, "longitude": this.state.longitude,
-            "sos": 1, "state": 0,
+            "target": this.state.target, "state": this.state.state,
         };
         let data = transfer_json_to_form(text);
 
@@ -119,36 +121,17 @@ class AskForHelp extends React.Component {
                 .then((res) => {
                     if (res.status === 200)
                         res.json().then((res) => {
-                            let temp = [];
-                            let count = 0;
-                            for (let i = 0; i < this.state.markers.length ; i++) {
-                                if (this.state.markers[i].title !== 'rescuer')
-                                    temp.push(this.state.markers[i]);
-                                else {
-                                    if(count<res.length) {
-                                        temp.push({
-                                            latitude: res[count].latitude,
-                                            longitude: res[count].longitude,
-                                            title: 'rescuer',
-                                        });
-                                        count++;
-                                    }else {
-                                        temp.push({});
-                                    }
-                                }
-                            }
-                            this.state.markers = temp;
-                            for (; count < res.length ; count++) {
-                                this.state.markers = [...this.state.markers,{
-                                        latitude: res[count].latitude,
-                                        longitude: res[count].longitude,
-                                        title: 'rescuer',
-                                    }];
-                            }
-                            this.setState({
-                                rescuer: res,
-                                markers: this.state.markers,
-                            });
+                            // for(let i = 0;i<this.state.markers.length-1;i++){
+                            //     this.state.markers.pop();
+                            // }
+                            // for(let i=0;i<res.length;i++){
+                            //     this.setState({
+                            //         markers: [...this.state.markers,{
+                            //             number: res.number,
+                            //             latitude: res.location,
+                            //             longitude: res.location,}],
+                            //     });
+                            // }
                         });
                     else if (res.status === 203)
                         return Promise.reject("未知错误");
@@ -158,10 +141,9 @@ class AskForHelp extends React.Component {
                         return Promise.reject("服务器错误");
                 })
                 .catch((err) => console.error(err));
-        }, 1000*5);
+        }, 1000);
 
-        this.handleSearchAED = this.handleSearchAED.bind(this);
-        this.handleSearchHospital = this.handleSearchHospital.bind(this);
+        this.handleSearch = this.handleSearch.bind(this);
         this.handleClear = this.handleClear.bind(this);
         this.handleFinish = this.handleFinish.bind(this);
     }
@@ -188,7 +170,7 @@ class AskForHelp extends React.Component {
         this.timer && clearInterval(this.timer);
     }
 
-    handleSearchAED(event) {
+    handleSearch(event) {
         event.preventDefault();
         fetch('http://api.map.baidu.com/place/v2/search?query=AED&location=' + this.state.center.latitude.toLocaleString() +
             ',' + this.state.center.longitude.toLocaleString() + '&radius=2000&output=json&ak=R2GE2Dos0neHI4eEb8PwQeRGyGN7MWL7')
@@ -196,45 +178,14 @@ class AskForHelp extends React.Component {
             .then((res) => {
                 if (res.status === 0) {
                     for (let i = 0; i < res.results.length; i++) {
-                        this.state.markers = [...this.state.markers, {
-                            latitude: res.results[i].location.lat,
-                            longitude: res.results[i].location.lng,
-                            title: 'AED'
-                        }];
+                        this.setState({
+                            markers: [...this.state.markers, {
+                                latitude: res.results[i].location.lat,
+                                longitude: res.results[i].location.lng,
+                                title: 'AED'
+                            }],
+                        });
                     }
-                    this.setState({
-                        markers: this.state.markers,
-                    })
-                }
-                else if (res.status === 2)
-                    alert('数据请求格式不正确');
-                else if (res.status === 3)
-                    alert('权限校验失败');
-                else if (res.status === 4)
-                    alert('配额校验失败');
-                else if (res.status === 5)
-                    alert('ak不存在或者非法');
-            })
-            .catch((err) => console.error(err));
-    }
-
-    handleSearchHospital(event) {
-        event.preventDefault();
-        fetch('http://api.map.baidu.com/place/v2/search?query=医院&location=' + this.state.center.latitude.toLocaleString() +
-            ',' + this.state.center.longitude.toLocaleString() + '&radius=2000&output=json&ak=R2GE2Dos0neHI4eEb8PwQeRGyGN7MWL7')
-            .then((res) => res.json())
-            .then((res) => {
-                if (res.status === 0) {
-                    for (let i = 0; i < res.results.length; i++) {
-                        this.state.markers = [...this.state.markers, {
-                            latitude: res.results[i].location.lat,
-                            longitude: res.results[i].location.lng,
-                            title: 'Hospital'
-                        }];
-                    }
-                    this.setState({
-                        markers: this.state.markers,
-                    })
                 }
                 else if (res.status === 2)
                     alert('数据请求格式不正确');
@@ -250,14 +201,10 @@ class AskForHelp extends React.Component {
 
     handleClear(event){
         event.preventDefault();
-        let temp = [];
-        for (let i = 0; i < this.state.markers.length ; i++) {
-            if (this.state.markers[i].title !== 'AED'&&this.state.markers[i].title !== 'Hospital')
-                temp.push(this.state.markers[i]);
+        for (let i = 0; i < this.state.markers.length - 1; i++) {
+            if (this.state.markers[i].title === 'AED')
+                this.state.markers.pop();
         }
-        this.setState({
-            markers: temp,
-        })
     }
 
     handleFinish(event){
@@ -298,11 +245,13 @@ class AskForHelp extends React.Component {
 
     render() {
         let data = this.state.rescuer;
+        // for (let i = 0; i < 10; i++)
+        //     data.push({key: i, number: 1001});
         return (
-            <View style={styles.container_A}>
+            <View style={styles.container_C}>
                 <View style={styles.header}>
                     <Icon.Button style={styles.icon} name="angle-left" backgroundColor="rgb(247,92,47)"
-                                 size={per * 30} onPress={() => this.props.navigation.goBack()}/>
+                                 size={30} onPress={() => this.props.navigation.goBack()}/>
                 </View>
                 <MapView
                     trafficEnabled={this.state.trafficEnabled}
@@ -318,29 +267,36 @@ class AskForHelp extends React.Component {
                     }}
                     onMapClick={(e) => {
                     }}/>
-                <View style={{flex: 0.01}}/>
+                <View style={{flex:0.01}}/>
 
                 <View style={{flex: 0.05, flexDirection: 'column'}}>
                     <View style={{flex: 0.1, flexDirection: 'row', justifyContent: 'space-around'}}>
-                        <TouchableOpacity onPress={this.handleSearchAED.bind(this)} style={styles.btn_askForHelp}>
-                            <Text style={styles.btnText_askForHelp}>
+                        <TouchableOpacity onPress={this.handleSearch.bind(this)}
+                                          style={{
+                                              width: 80,
+                                              height: 20,
+                                              justifyContent: 'center',
+                                              alignItems: 'center'
+                                          }}>
+                            <Text style={styles.btnText_M}>
                                 搜索AED
                             </Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={this.handleSearchHospital.bind(this)} style={styles.btn_askForHelp}>
-                            <Text style={styles.btnText_askForHelp}>
-                                搜索医院
-                            </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={this.handleClear.bind(this)} style={styles.btn_askForHelp}>
-                            <Text style={styles.btnText_askForHelp}>
+                        <TouchableOpacity onPress={this.handleClear.bind(this)}
+                                          style={{
+                                              width: 80,
+                                              height: 20,
+                                              justifyContent: 'center',
+                                              alignItems: 'center'
+                                          }}>
+                            <Text style={styles.btnText_M}>
                                 清除搜索
                             </Text>
                         </TouchableOpacity>
                     </View>
                 </View>
 
-                <View style={{flex: 0.4 ,}}>
+                <View style={{flex: 0.4}}>
                     <FlatList
                         ref={(flatList) => this._flatList = flatList}
                         renderItem={this._renderItem}
@@ -352,8 +308,14 @@ class AskForHelp extends React.Component {
 
                 <View style={{flex: 0.03, flexDirection: 'column'}}>
                     <View style={{flex: 0.1, flexDirection: 'row', justifyContent: 'center'}}>
-                        <TouchableOpacity onPress={this.handleFinish.bind(this)} style={styles.btn_M}>
-                            <Text style={styles.btnText_P}>
+                        <TouchableOpacity onPress={this.handleFinish.bind(this)}
+                                          style={{
+                                              width: 80,
+                                              height: 20,
+                                              justifyContent: 'center',
+                                              alignItems: 'center'
+                                          }}>
+                            <Text style={styles.btnText_M}>
                                 结束求救
                             </Text>
                         </TouchableOpacity>
@@ -365,4 +327,4 @@ class AskForHelp extends React.Component {
     }
 }
 
-export default AskForHelp;
+export default HelpDetail;

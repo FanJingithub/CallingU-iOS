@@ -3,13 +3,9 @@
  */
 import React from 'react';
 import {
-    AppRegistry,
-    StyleSheet,
     Text,
     View,
-    ViewPagerAndroid,
     ImageBackground,
-    Button,
     TouchableOpacity
 } from 'react-native';
 import Swiper from 'react-native-swiper'
@@ -47,7 +43,7 @@ class GuidePage extends React.Component{
                             <TouchableOpacity style={styles.btn_G}
                                               onPress={() => this.props.navigation.navigate('Welcome')} title="CallingU">
                                 <Text style={styles.btnText}>
-                                    Welcome!
+                                    启动应用
                                 </Text>
                             </TouchableOpacity>
                         </View>
