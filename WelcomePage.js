@@ -9,7 +9,7 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import style from "./Style"
-import storage from '/Users/Aliez/WebstormProjects/CallingU/src/Util/Param.js';
+import storage from './src/Util/Param.js';
 
 const styles = style;
 
@@ -26,7 +26,7 @@ class WelcomePage extends React.Component{
     render() {
         return (
             <View style={styles.container_W}>
-                <ImageBackground source={{uri: '/Users/Aliez/WebstormProjects/CallingU/img/guide3.jpg'}}
+                <ImageBackground source={{uri: './img/guide3.jpg'}}
                                  style={styles.backgroundImage}>
                     <View style={styles.stone_W}/>
                     <View style={styles.buttonContainer}>

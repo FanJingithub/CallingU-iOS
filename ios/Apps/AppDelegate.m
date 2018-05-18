@@ -12,14 +12,17 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 #import "RCTBaiduMapViewManager.h"
+//#import "BNCoreServices.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   NSURL *jsCodeLocation;
-  
+
   [RCTBaiduMapViewManager initSDK:@"8hT6BKZ18Q5rYlKLHgESpv92TFZafUgK"];
+//  [BNCoreServices_Instance initServices:@"8hT6BKZ18Q5rYlKLHgESpv92TFZafUgK"];
+//  [BNCoreServices_Instance startServicesAsyn:nil fail:nil];
 
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
 
@@ -34,6 +37,11 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+
+//  //导航控制
+//  _nav = [[UINavigationController alloc]initWithRootViewController:rootViewController];
+//  self.window.rootViewController = _nav;
+
   return YES;
 }
 

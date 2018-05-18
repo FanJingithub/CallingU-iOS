@@ -8,10 +8,12 @@ import {
     Text,
     TouchableOpacity,
     Modal,
-    Dimensions
+    Dimensions,
+    NativeModules,
+    requireNativeComponent
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import storage from '/Users/Aliez/WebstormProjects/CallingU/src/Util/Param.js';
+import storage from './src/Util/Param.js';
 import QuitButton from './QuitButton';
 import { Badge } from 'antd-mobile';
 import {Geolocation} from 'react-native-baidu-map';
@@ -20,6 +22,8 @@ import style from "./Style";
 
 const styles = style;
 const per = Dimensions.get('window').width/414;
+
+// const Push = NativeModules.PushNative;
 
 class MainPage extends React.Component {
     static navigationOptions = {
@@ -44,10 +48,13 @@ class MainPage extends React.Component {
             transparent: true,
             transparent_btn: true,
             setCookie: null,
+            doctor: false,
+            count: 0,
         };
 
         this.handlePress = this.handlePress.bind(this);
         this.showModal = this.showModal.bind(this);
+        // this.test = this.test.bind(this);
 
         this.timer = setTimeout(() => {
             Geolocation.getCurrentPosition()
@@ -77,9 +84,30 @@ class MainPage extends React.Component {
                 alert(error);
             });
         storage.save({key: 'target', data: this.state.number});
-        storage.save({key: 'sos', data: -1});
-        storage.save({key: 'state', data: -1});
-        storage.save({key: 'phonestate', data: 0});
+
+        fetch('https://www.xiaobenji.net/api/check-level',{
+            method:'GET',
+            headers:{
+                'set-cookie': this.state.setCookie,
+            },
+        })
+            .then((res) =>{
+                if (res.status === 200){
+                    res.json().then((res) => {
+                        if(res.level === 0){
+                            this.setState({
+                                doctor: true,
+                            });
+                        }
+                    })
+                }
+                else if (res.status === 203)
+                    return Promise.reject("未知错误");
+                else if (res.status === 400)
+                    return Promise.reject("请求失败");
+                else if (res.status === 500)
+                    return Promise.reject("服务器错误");
+        });
     }
 
     componentWillUnmount() {
@@ -139,6 +167,10 @@ class MainPage extends React.Component {
             })
     }
 
+    // test(){
+    //     Push.RNOpenOneVC('测试');
+    // }
+
     handlePress(event) {
         event.preventDefault();
         this.setState({
@@ -176,48 +208,84 @@ class MainPage extends React.Component {
             })
             .catch((err) => console.error(err));
 
-        let text = {
-            "number": this.state.number, "latitude": this.state.latitude, "longitude": this.state.longitude,
-            "sos": 1, "state": 0,
-        };
-        let data = transfer_json_to_form(text);
-        fetch('https://www.xiaobenji.net/api/get-help', {
-            method: 'POST',
-            headers: {
-                'set-cookie': this.state.setCookie,
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: data,
-        })
+        fetch('http://apis.map.qq.com/ws/coord/v1/translate?locations='+this.state.latitude.toLocaleString()+','
+            +this.state.longitude.toLocaleString()+ '&type=3&key=RL6BZ-VJ6C6-4L2ST-EGUUA-LTB3O-ZFBCO&output=json')
+            .then((res) => res.json())
             .then((res) => {
-                if (res.status === 200)
-                    res.json().then((res) => {
-                        storage.save({key: 'help', data: 1});
-                        this.state.navigation.navigate('AskForHelp',
-                            {
-                                number: this.state.number,
-                                latitude: this.state.latitude,
-                                longitude: this.state.longitude,
-                                rescuer: res
+            if(res.status === 0) {
+                let text = {
+                    "number": this.state.number,
+                    "latitude": res.locations[0].latitude,
+                    "longitude": res.locations[0].longitude,
+                    "sos": 1,
+                    "state": 0,
+                };
+                let data = transfer_json_to_form(text);
+                fetch('https://www.xiaobenji.net/api/get-help', {
+                    method: 'POST',
+                    headers: {
+                        'set-cookie': this.state.setCookie,
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: data,
+                })
+                    .then((res) => {
+                        if (res.status === 200)
+                            res.json().then((res) => {
+                                storage.save({key: 'help', data: 1});
+                                this.state.navigation.navigate('AskForHelp',
+                                    {
+                                        number: this.state.number,
+                                        latitude: this.state.latitude,
+                                        longitude: this.state.longitude,
+                                        rescuer: res
+                                    });
                             });
-                    });
-                else if (res.status === 203)
-                    return Promise.reject("未知错误");
-                else if (res.status === 400)
-                    return Promise.reject("请求失败");
-                else if (res.status === 500)
-                    return Promise.reject("服务器错误");
+                        else if (res.status === 203)
+                            return Promise.reject("未知错误");
+                        else if (res.status === 400)
+                            return Promise.reject("请求失败");
+                        else if (res.status === 500)
+                            return Promise.reject("服务器错误");
+                    })
+                    .catch((err) => console.error(err));
+            }
             })
             .catch((err) => console.error(err));
     }
 
     render() {
+        let ws = new WebSocket('ws://118.89.111.214:2333/api/status');
+        ws.onopen = function (evt) {
+        };
+        ws.onmessage = function (evt) {
+            let res = evt.data;
+            if(res.state === 0){
+                alert("有新的患者发起了求救！");
+                let temp = this.state.count+1;
+                this.setState({
+                    count: temp,
+                });
+            }
+            else if(res.state === -1){
+                let temp = this.state.count-1;
+                if(temp < 0){
+                    temp = 0;
+                }
+                this.setState({
+                    count: temp,
+                });
+            }
+        };
         let modalBackgroundStyle = {
             backgroundColor: this.state.transparent ? 'rgba(0, 0, 0, 0.5)' : 'red',
         };
         let innerContainerTransparentStyle = this.state.transparent
             ? {backgroundColor: '#fff', padding: 20}
             : null;
+        let doctorBackgroundStyle = {
+            color: this.state.doctor ? 'black':'transparent',
+        };
         return (
             <View style={styles.container_M}>
                 <View style={styles.header_M}>
@@ -264,22 +332,24 @@ class MainPage extends React.Component {
                         this.showModal.bind(this)
                     }>
                         <Image style={styles.img_M}
-                               source={require('/Users/Aliez/WebstormProjects/CallingU/img/faint.png')}
+                               source={require('./img/faint.png')}
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                        // onPress={this.test.bind(this)}
+                    >
                         <Image style={styles.img_M}
-                               source={require('/Users/Aliez/WebstormProjects/CallingU/img/trauma.png')}
+                               source={require('./img/trauma.png')}
                         />
                     </TouchableOpacity>
                     <View style={styles.container_M2}>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('HelpList', {
-                            number: this.state.number,
-                            latitude: this.state.latitude,
-                            longitude: this.state.longitude
-                        })}>
-                            <Badge text={100}>
-                                <Icon style={styles.icon2} name="user-md" size={per*60}/>
+                        <TouchableOpacity disabled={!this.state.doctor}
+                                          onPress={() => this.props.navigation.navigate('HelpList',{
+                                              number:this.state.number,
+                                              latitude:this.state.latitude,
+                                              longitude:this.state.longitude})}>
+                            <Badge text={this.state.count}>
+                                <Icon style={[styles.icon2, doctorBackgroundStyle]} name="user-md" size={per*60}/>
                             </Badge>
                         </TouchableOpacity>
                     </View>

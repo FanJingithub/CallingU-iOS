@@ -20,6 +20,7 @@ import AskForHelp from './AskForHelp';
 import Information from './Information';
 import VersionDetail from './VersionDetail';
 import HelpList from "./HelpList";
+import HelpDetail from './HelpDetail';
 import Feedback from "./Feedback";
 import Message from "./Message";
 import TlistSet from "./TlistSet";
@@ -176,6 +177,13 @@ const SimpleApp = StackNavigator({
         screen: HelpList,
         navigationOptions: ({navigation}) => ({
             gesturesEnabled: false,
+        }),
+    },
+    HelpDetail:{
+        screen: HelpDetail,
+        navigationOptions: ({navigation}) => ({
+            gesturesEnabled: false,
+            header: null,
         }),
     },
     Feedback: {

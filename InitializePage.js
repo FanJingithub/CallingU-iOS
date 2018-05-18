@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import {View,StyleSheet,Animated,Dimensions } from 'react-native';
-import storage from '/Users/Aliez/WebstormProjects/CallingU/src/Util/Param.js';
+import storage from './src/Util/Param.js';
 import style from "./Style"
 
 const styles = style;
 
-const splashImg = require('/Users/Aliez/WebstormProjects/CallingU/img/initial.jpeg');//加载图片
+const splashImg = require('./img/initial.jpeg');//加载图片
 
 const { width, height } = Dimensions.get('window');
 

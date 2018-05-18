@@ -8,7 +8,7 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import storage from '/Users/Aliez/WebstormProjects/CallingU/src/Util/Param.js';
+import storage from './src/Util/Param.js';
 import { InputItem, Toast } from 'antd-mobile';
 import qs from 'qs';
 import style from "./Style"
@@ -36,6 +36,9 @@ class PasswordSignIn extends React.Component {
         }).catch((error) => {
             storage.save({key:'isFirst', data:'true'});
             storage.save({key: 'help', data: 0});
+            storage.save({key: 'sos', data: -1});
+            storage.save({key: 'state', data: -1});
+            storage.save({key: 'phonestate', data: 0});
         });
     }
 
@@ -265,16 +268,16 @@ class PasswordSignIn extends React.Component {
                                 {/*</Text>*/}
                             {/*</TouchableOpacity>*/}
                         {/*</View>*/}
-                        <View style={styles.row}>
-                            <Text style={styles.reminderText}>点击此处查看</Text>
-                            <TouchableOpacity
-                                // style={styles.btn}
-                                onPress={this._onPress}>
-                                <Text style={styles.information}>
-                                    使用说明
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
+                        {/*<View style={styles.row}>*/}
+                            {/*<Text style={styles.reminderText}>点击此处查看</Text>*/}
+                            {/*<TouchableOpacity*/}
+                                {/*// style={styles.btn}*/}
+                                {/*onPress={this._onPress}>*/}
+                                {/*<Text style={styles.information}>*/}
+                                    {/*使用说明*/}
+                                {/*</Text>*/}
+                            {/*</TouchableOpacity>*/}
+                        {/*</View>*/}
                         {/*<View style={styles.reminder}>*/}
                         {/*<View style={styles.row}>*/}
                         {/*<TouchableOpacity style={styles.shift_P}*/}

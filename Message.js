@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import style from "./Style";
-import storage from '/Users/Aliez/WebstormProjects/CallingU/src/Util/Param.js';
+import storage from './src/Util/Param.js';
 import {TextareaItem} from 'antd-mobile';
 import {createForm} from 'rc-form';
 
@@ -33,7 +33,7 @@ class MessageEdit extends React.Component{
                     {...getFieldProps('message', {
                         initialValue: this.props.message
                     })}
-                    keyboardType="phone-pad"
+                    // keyboardType="phone-pad"
                     returnKeyType="done"
                     rows={10}
                     count={100}

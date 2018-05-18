@@ -17,7 +17,7 @@ import {
     Geolocation
 } from 'react-native-baidu-map';
 import { Card, WingBlank, WhiteSpace, List } from 'antd-mobile';
-import storage from '/Users/Aliez/WebstormProjects/CallingU/src/Util/Param.js';
+import storage from './src/Util/Param.js';
 import qs from 'qs';
 import style from "./Style";
 
@@ -34,27 +34,37 @@ class AskForHelp extends React.Component {
 
     _renderItem = (item) => {
         let phoneNumber = item.item.number;
-        return (
-            <WingBlank size="lg">
-                <WhiteSpace size="lg"/>
-                <TouchableOpacity style={{
-                    flex: 0.1, backgroundColor: 'rgb(255,255,255)',
-                    flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center'
-                }}>
-                    <Icon name="location-arrow" backgroundColor="rgb(255,255,255)"
-                          size={per * 50}/>
-                    <Text style={{fontSize: 20}}>救援者：</Text>
-                    <Text style={{fontSize: 20}}>{phoneNumber}</Text>
-                    <Icon.Button name="phone-square" backgroundColor="rgb(255,255,255)" size={per*30}
-                                 color="black" onPress={() => Linking.openURL('tel:'+{phoneNumber})}/>
-                </TouchableOpacity>
-                <WhiteSpace size="lg"/>
-            </WingBlank>
-        )
+        if(item.item.finish === 0) {
+            return (
+                <WingBlank size="lg">
+                    <WhiteSpace size="lg"/>
+                    <TouchableOpacity style={{
+                        flex: 0.1, backgroundColor: 'rgb(255,255,255)',
+                        flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center'
+                    }}>
+                        <Icon name="location-arrow" backgroundColor="rgb(255,255,255)"
+                              size={per * 50}/>
+                        <Text style={{fontSize: 20}}>救援者：</Text>
+                        <Text style={{fontSize: 20}}>{phoneNumber}</Text>
+                        <Icon.Button name="phone-square" backgroundColor="rgb(255,255,255)" size={per * 30}
+                                     color="black" onPress={() => Linking.openURL('tel:' + JSON.stringify(phoneNumber))}/>
+                    </TouchableOpacity>
+                    <WhiteSpace size="lg"/>
+                </WingBlank>
+            )
+        }
+        else {
+            return null;
+        }
     };
 
     _header = () => {
-        if(this.state.rescuer.length < 1) {
+        let count = 0;
+        for(let i=0;i<this.state.rescuer.length;i++){
+            if(this.state.rescuer[i].finish === 0)
+                count++;
+        }
+        if(this.state.rescuer.length < 1 || count === 0) {
             return (
                 <View>
                     <View style={{height: per*2, backgroundColor: 'rgba(0,0,0,0)'}}/>
@@ -98,67 +108,7 @@ class AskForHelp extends React.Component {
             setCookie: null,
             rescuer: this.props.navigation.state.params.rescuer,
         };
-        let transfer_json_to_form = (params) => {
-            return qs.stringify(params)
-        };
-        let text = {
-            "number": this.state.number, "latitude": this.state.latitude, "longitude": this.state.longitude,
-            "sos": 1, "state": 0,
-        };
-        let data = transfer_json_to_form(text);
 
-        this.timer = setInterval(() => {
-            fetch('https://www.xiaobenji.net/api/get-help', {
-                method: 'POST',
-                headers: {
-                    'set-cookie': this.state.setCookie,
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: data,
-            })
-                .then((res) => {
-                    if (res.status === 200)
-                        res.json().then((res) => {
-                            let temp = [];
-                            let count = 0;
-                            for (let i = 0; i < this.state.markers.length ; i++) {
-                                if (this.state.markers[i].title !== 'rescuer')
-                                    temp.push(this.state.markers[i]);
-                                else {
-                                    if(count<res.length) {
-                                        temp.push({
-                                            latitude: res[count].latitude,
-                                            longitude: res[count].longitude,
-                                            title: 'rescuer',
-                                        });
-                                        count++;
-                                    }else {
-                                        temp.push({});
-                                    }
-                                }
-                            }
-                            this.state.markers = temp;
-                            for (; count < res.length ; count++) {
-                                this.state.markers = [...this.state.markers,{
-                                        latitude: res[count].latitude,
-                                        longitude: res[count].longitude,
-                                        title: 'rescuer',
-                                    }];
-                            }
-                            this.setState({
-                                rescuer: res,
-                                markers: this.state.markers,
-                            });
-                        });
-                    else if (res.status === 203)
-                        return Promise.reject("未知错误");
-                    else if (res.status === 400)
-                        return Promise.reject("请求失败");
-                    else if (res.status === 500)
-                        return Promise.reject("服务器错误");
-                })
-                .catch((err) => console.error(err));
-        }, 1000*5);
 
         this.handleSearchAED = this.handleSearchAED.bind(this);
         this.handleSearchHospital = this.handleSearchHospital.bind(this);
@@ -182,6 +132,170 @@ class AskForHelp extends React.Component {
             .catch((error) => {
                 alert(error);
             });
+
+        let transfer_json_to_form = (params) => {
+            return qs.stringify(params)
+        };
+        let text;
+        if(this.state.latitude === undefined){
+            fetch('http://apis.map.qq.com/ws/coord/v1/translate?locations='+this.props.navigation.state.params.latitude.toLocaleString()+','
+                +this.props.navigation.state.params.longitude.toLocaleString()+ '&type=3&key=RL6BZ-VJ6C6-4L2ST-EGUUA-LTB3O-ZFBCO&output=json')
+                .then((res) => res.json())
+                .then((res) => {
+                    if(res.status === 0) {
+                        text = {
+                            "number": this.props.navigation.state.params.number, "latitude": res.locations[0].lat,
+                            "longitude": res.locations[0].lng, "sos": 1, "state": 0,
+                        };
+                        let data = transfer_json_to_form(text);
+                        this.timer = setInterval(() => {
+                            fetch('https://www.xiaobenji.net/api/get-help', {
+                                method: 'POST',
+                                headers: {
+                                    'set-cookie': this.state.setCookie,
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                                body: data,
+                            })
+                                .then((res) => {
+                                    if (res.status === 200)
+                                        res.json().then((result) => {
+                                            for (let i = 0; i < result.length; i++) {
+                                                fetch('http://api.map.baidu.com/geoconv/v1/?coords=' +result[i].longitude.toLocaleString()
+                                                    + ',' + result[i].latitude.toLocaleString() + '&from=3&to=5&ak=R2GE2Dos0neHI4eEb8PwQeRGyGN7MWL7')
+                                                    .then((res) => res.json())
+                                                    .then((res) => {
+                                                        if (res.status === 0) {
+                                                            result[i].latitude = res.result[0].y;
+                                                            result[i].longitude = res.result[0].x;
+                                                        }
+                                                    })
+                                                    .catch((err) => console.error(err));
+                                            }
+                                            let temp = [];
+                                            let count = 1;
+                                            for (let i = 0; i < this.state.markers.length; i++) {
+                                                if (this.state.markers[i].title !== 'rescuer')
+                                                    temp.push(this.state.markers[i]);
+                                                else {
+                                                    if (count < result.length) {
+                                                        temp.push({
+                                                            latitude: result[count].latitude,
+                                                            longitude: result[count].longitude,
+                                                            title: 'rescuer',
+                                                        });
+                                                        count++;
+                                                    } else {
+                                                        temp.push({});
+                                                    }
+                                                }
+                                            }
+                                            this.state.markers = temp;
+                                            for (; count < result.length; count++) {
+                                                this.state.markers = [...this.state.markers, {
+                                                    latitude: result[count].latitude,
+                                                    longitude: result[count].longitude,
+                                                    title: 'rescuer',
+                                                }];
+                                            }
+                                            this.setState({
+                                                rescuer: result,
+                                                markers: this.state.markers,
+                                            });
+                                        });
+                                    else if (res.status === 203)
+                                        return Promise.reject("未知错误");
+                                    else if (res.status === 400)
+                                        return Promise.reject("请求失败");
+                                    else if (res.status === 500)
+                                        return Promise.reject("服务器错误");
+                                })
+                                .catch((err) => console.error(err));
+                        }, 1000 * 5);
+                    }
+                })
+                .catch((err) => console.error(err));
+        }else {
+            fetch('http://apis.map.qq.com/ws/coord/v1/translate?locations='+this.state.latitude.toLocaleString()+','
+                +this.state.longitude.toLocaleString()+ '&type=3&key=RL6BZ-VJ6C6-4L2ST-EGUUA-LTB3O-ZFBCO&output=json')
+                .then((res) => res.json())
+                .then((res) => {
+                    if(res.status === 0){
+                        text = {
+                            "number": this.state.number, "latitude": res.locations[0].lat, "longitude": res.locations[0].lng,
+                            "sos": 1, "state": 0,
+                        };
+                        let data = transfer_json_to_form(text);
+                        this.timer = setInterval(() => {
+                            fetch('https://www.xiaobenji.net/api/get-help', {
+                                method: 'POST',
+                                headers: {
+                                    'set-cookie': this.state.setCookie,
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                                body: data,
+                            })
+                                .then((res) => {
+                                    if (res.status === 200)
+                                        res.json().then((result) => {
+                                            for(let i =0;i<result.length;i++) {
+                                                fetch('http://api.map.baidu.com/geoconv/v1/?coords='+result[i].longitude.toLocaleString()
+                                                    +','+result[i].latitude.toLocaleString()+'&from=3&to=5&ak=R2GE2Dos0neHI4eEb8PwQeRGyGN7MWL7')
+                                                    .then((res) => res.json())
+                                                    .then((res) => {
+                                                        if (res.status === 0) {
+                                                            result[i].latitude = res.result[0].y;
+                                                            result[i].longitude = res.result[0].x;
+                                                        }
+                                                    })
+                                                    .catch((err) => console.error(err));
+                                            }
+                                            let temp = [];
+                                            let count = 0;
+                                            for (let i = 0; i < this.state.markers.length ; i++) {
+                                                if (this.state.markers[i].title !== 'rescuer')
+                                                    temp.push(this.state.markers[i]);
+                                                else {
+                                                    if(count<result.length) {
+                                                        temp.push({
+                                                            latitude: result[count].latitude,
+                                                            longitude: result[count].longitude,
+                                                            title: 'rescuer',
+                                                        });
+                                                        count++;
+                                                    }else {
+                                                        temp.push({});
+                                                    }
+                                                }
+                                            }
+                                            this.state.markers = temp;
+                                            for (; count < result.length ; count++) {
+                                                this.state.markers = [...this.state.markers,{
+                                                    latitude: result[count].latitude,
+                                                    longitude: result[count].longitude,
+                                                    title: 'rescuer',
+                                                }];
+                                            }
+                                            this.setState({
+                                                rescuer: result,
+                                                markers: this.state.markers,
+                                            });
+                                        });
+                                    else if (res.status === 203)
+                                        return Promise.reject("未知错误");
+                                    else if (res.status === 400)
+                                        return Promise.reject("请求失败");
+                                    else if (res.status === 500)
+                                        return Promise.reject("服务器错误");
+                                })
+                                .catch((err) => console.error(err));
+                        }, 1000*5);
+                    }
+                })
+                .catch((err) => console.error(err));
+
+        }
+
     }
 
     componentWillUnmount() {

@@ -27,15 +27,15 @@ class GuidePage extends React.Component{
         return (
             <Swiper style={styles.wrapper} showsButtons loop={false}>
                 <View style={styles.slide1}>
-                    <ImageBackground source={{uri:'/Users/Aliez/WebstormProjects/CallingU/img/guide1.jpg'}} style={styles.backgroundImage}>
+                    <ImageBackground source={{uri:'./img/guide1.jpg'}} style={styles.backgroundImage}>
                     </ImageBackground>
                 </View>
                 <View style={styles.slide2}>
-                    <ImageBackground source={{uri:'/Users/Aliez/WebstormProjects/CallingU/img/guide2.jpg'}} style={styles.backgroundImage}>
+                    <ImageBackground source={{uri:'./img/guide2.jpg'}} style={styles.backgroundImage}>
                     </ImageBackground>
                 </View>
                 <View style={styles.slide3}>
-                    <ImageBackground source={{uri:'/Users/Aliez/WebstormProjects/CallingU/img/guide3.jpg'}} style={styles.backgroundImage}>
+                    <ImageBackground source={{uri:'./img/guide3.jpg'}} style={styles.backgroundImage}>
                         <View style={styles.stone_G}/>
                         <View style={styles.stone_G}/>
                         <View style={styles.stone_G}/>

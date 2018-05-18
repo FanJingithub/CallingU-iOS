@@ -13,7 +13,7 @@ import {
     Switch,
 } from 'antd-mobile';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import storage from '/Users/Aliez/WebstormProjects/CallingU/src/Util/Param.js';
+import storage from './src/Util/Param.js';
 import { createForm } from 'rc-form';
 import style from "./Style";
 

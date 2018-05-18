@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import QuitButton from './QuitButton';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import storage from '/Users/Aliez/WebstormProjects/CallingU/src/Util/Param.js';
+import storage from './src/Util/Param.js';
 import style from "./Style";
 
 const styles = style;
@@ -87,7 +87,7 @@ class VersionDetail extends React.Component{
                 </View>
                 <View style={styles.container_V}>
                 <View style={styles.container_V_Body}>
-                    <Image source={require('/Users/Aliez/WebstormProjects/CallingU/img/logo.png')}/>
+                    <Image source={require('./img/logo.png')}/>
                     <Text/>
                     <Text/>
                     <Text style={styles.versionText}>一键呼救 {this.state.versionName}</Text>

@@ -7,7 +7,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import style from "./Style";
 import qs from 'qs';
-import storage from '/Users/Aliez/WebstormProjects/CallingU/src/Util/Param.js';
+import storage from './src/Util/Param.js';
 import {TextareaItem} from 'antd-mobile';
 import {createForm} from 'rc-form';
 
